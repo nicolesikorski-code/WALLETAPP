@@ -27,62 +27,112 @@ export default function TransactionHistory({ address }: TransactionHistoryProps)
   const [error, setError] = useState<string | null>(null);
 
   const fetchTransactions = async () => {
-    if (!address) return;
+    if (!address) {
+      console.log("TransactionHistory: No address provided");
+      return;
+    }
 
+    console.log("TransactionHistory: Fetching transactions for address:", address);
     setLoading(true);
     setError(null);
 
     try {
-      // Obtener transacciones desde Horizon
-      const response = await fetch(
-        `${HORIZON_URL}/accounts/${address}/transactions?order=desc&limit=20`
-      );
+      const url = `${HORIZON_URL}/accounts/${address}/operations?order=desc&limit=20&include_failed=false`;
+      console.log("TransactionHistory: Fetching from URL:", url);
+      
+      // Obtener operaciones directamente (más eficiente y confiable)
+      // Incluir solo operaciones exitosas y de tipo payment, create_account, account_merge, change_trust
+      const response = await fetch(url);
 
       if (!response.ok) {
+        const errorText = await response.text();
+        console.error("TransactionHistory: Fetch failed:", response.status, errorText);
         throw new Error("Error al cargar las transacciones");
       }
 
       const data = await response.json();
       
-      // Procesar transacciones
-      const processedTx: Transaction[] = data._embedded.records.map((tx: any) => {
-        // Buscar operación de pago
-        const paymentOp = tx.operations?._embedded?.records?.find(
-          (op: any) => op.type === "payment"
-        );
+      console.log("TransactionHistory: Operations data from API:", data);
+      console.log("TransactionHistory: Records count:", data._embedded?.records?.length);
+      
+      // Procesar operaciones
+      const processedTx: Transaction[] = data._embedded.records.map((op: any) => {
+        // Determinar tipo y cantidad según el tipo de operación
+        let amount = "0";
+        let type = "unknown";
+        let from = address;
+        let to = address;
+        let asset_code = "XLM";
+        let asset_issuer;
 
-        if (!paymentOp) {
-          // Si no es pago, usar la primera operación
-          const firstOp = tx.operations?._embedded?.records?.[0];
-          return {
-            id: tx.id,
-            hash: tx.hash,
-            created_at: tx.created_at,
-            type: firstOp?.type || "unknown",
-            amount: "0",
-            from: address,
-            to: firstOp?.to || "",
-            memo: tx.memo || "",
-          };
+        if (op.type === "payment") {
+          // Asegurarse de capturar el amount correctamente
+          // La API siempre devuelve amount como string en formato "100.0000000"
+          amount = op.amount || "0";
+          
+          // asset_type: "native" significa XLM
+          if (op.asset_type === "native") {
+            asset_code = "XLM";
+            asset_issuer = undefined;
+          } else {
+            asset_code = op.asset_code || "XLM";
+            asset_issuer = op.asset_issuer;
+          }
+          from = op.from || address;
+          to = op.to || address;
+          type = op.to === address ? "received" : "sent";
+        } else if (op.type === "create_account") {
+          amount = op.starting_balance || "0";
+          type = "received"; // La cuenta recibió fondos iniciales
+          from = op.funder || "";
+          to = address;
+        } else if (op.type === "account_merge") {
+          amount = op.amount || "0";
+          type = "received"; // La cuenta recibió los fondos
+          from = op.account || "";
+          to = address;
+                } else if (op.type === "change_trust") {
+          type = "trustline";
+          amount = "0";
         }
-
-        // Determinar dirección origen y destino
-        const isReceived = paymentOp.to === address;
         
-        return {
-          id: tx.id,
-          hash: tx.hash,
-          created_at: tx.created_at,
-          type: isReceived ? "received" : "sent",
-          amount: paymentOp.amount,
-          asset_code: paymentOp.asset_code || "XLM",
-          asset_issuer: paymentOp.asset_issuer,
-          from: paymentOp.from || address,
-          to: paymentOp.to,
-          memo: tx.memo || "",
+                // Intentar obtener el memo de la operación o usar vacío
+        let memo = "";
+        if (op.memo) {
+          memo = typeof op.memo === 'string' ? op.memo : op.memo || "";
+        } else if (op.memo_type && op.memo) {
+          memo = op.memo;
+        }
+        
+        const transaction = {
+          id: op.id || op.transaction_hash,
+          hash: op.transaction_hash || "",
+          created_at: op.created_at,
+          type: type,
+          amount: amount, // El amount ya está asignado correctamente arriba
+          asset_code: asset_code,
+          asset_issuer: asset_issuer,
+          from: from,
+          to: to,
+          memo: memo,
         };
+        
+        return transaction;
       });
 
+      console.log("All processed transactions:", processedTx);
+      
+      // Verificar amounts de transacciones de pago
+      const paymentTxs = processedTx.filter(tx => tx.type === "payment" || tx.type === "sent" || tx.type === "received");
+      if (paymentTxs.length > 0) {
+        console.log("Payment transactions amounts:", paymentTxs.map(tx => ({
+          hash: tx.hash.substring(0, 10),
+          type: tx.type,
+          amount: tx.amount,
+          asset: tx.asset_code
+        })));
+      }
+      
       setTransactions(processedTx);
     } catch (err: any) {
       console.error("Error fetching transactions:", err);
@@ -213,7 +263,9 @@ export default function TransactionHistory({ address }: TransactionHistoryProps)
                       <div className="flex items-center gap-2">
                         <span className="text-white font-semibold">
                           {tx.type === "sent" ? "-" : "+"}
-                          {parseFloat(tx.amount).toFixed(2)} {tx.asset_code || "XLM"}
+                          {tx.amount && parseFloat(tx.amount) > 0 
+                            ? parseFloat(tx.amount).toFixed(2) 
+                            : parseFloat(tx.amount || "0").toFixed(2)} {tx.asset_code || "XLM"}
                         </span>
                       </div>
 
