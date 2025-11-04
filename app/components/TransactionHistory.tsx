@@ -70,6 +70,17 @@ export default function TransactionHistory({ address }: TransactionHistoryProps)
           // La API siempre devuelve amount como string en formato "100.0000000"
           amount = op.amount || "0";
           
+          // Debug: ver qué estamos recibiendo de la API
+          console.log("Processing payment operation:", {
+            opId: op.id,
+            opAmount: op.amount,
+            opAmountType: typeof op.amount,
+            assignedAmount: amount,
+            from: op.from,
+            to: op.to,
+            address: address
+          });
+          
           // asset_type: "native" significa XLM
           if (op.asset_type === "native") {
             asset_code = "XLM";
@@ -116,6 +127,16 @@ export default function TransactionHistory({ address }: TransactionHistoryProps)
           to: to,
           memo: memo,
         };
+        
+        // Debug: verificar el objeto final antes de retornarlo
+        if (op.type === "payment") {
+          console.log("Final transaction object:", {
+            hash: transaction.hash.substring(0, 10) + "...",
+            type: transaction.type,
+            amount: transaction.amount,
+            asset: transaction.asset_code
+          });
+        }
         
         return transaction;
       });
