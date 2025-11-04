@@ -64,13 +64,6 @@ export default function TrustlineManager({ address, onTrustlineCreated }: Trustl
       try {
         const StellarSdkModule = await import("stellar-sdk");
         StellarSdk = StellarSdkModule.default || StellarSdkModule;
-        
-        // Si es un objeto vacío o no tiene las propiedades, intentar otra forma
-        if (!StellarSdk || (typeof StellarSdk === 'object' && Object.keys(StellarSdk).length === 0)) {
-          // Intentar importación alternativa
-          const altImport = await import("stellar-sdk/lib/index");
-          StellarSdk = altImport.default || altImport;
-        }
       } catch (importError) {
         console.error("Error al importar stellar-sdk:", importError);
         throw new Error("No se pudo cargar stellar-sdk. Asegúrate de que está instalado correctamente.");
