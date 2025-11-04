@@ -1,8 +1,16 @@
 @import "tailwindcss";
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --background: #1A1A2E;
+  --foreground: #FFFFFF;
+  
+  /* SharkWallet Color Palette */
+  --color-pink-main: #FF4D8D;
+  --color-orange-main: #FF7A3D;
+  --color-pink-light: #FFB3D1;
+  --color-orange-light: #FFB088;
+  --color-bg-dark: #1A1A2E;
+  --color-bg-secondary: #2D1B3D;
 }
 
 @theme inline {
@@ -12,15 +20,9 @@
   --font-mono: var(--font-geist-mono);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
-}
-
 body {
-  background: var(--background);
+  background: var(--color-bg-dark);
   color: var(--foreground);
   font-family: Arial, Helvetica, sans-serif;
+  min-height: 100vh;
 }

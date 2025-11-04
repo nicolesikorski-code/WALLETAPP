@@ -2,6 +2,8 @@
 
 import { useState } from "react";
 import { isConnected, requestAccess } from "@stellar/freighter-api";
+import Balance from "./Balance";
+import TrustlineManager from "./TrustlineManager";
 
 export default function WalletConnect() {
   // Estados para manejar la conexión
@@ -73,29 +75,29 @@ export default function WalletConnect() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-indigo-50 via-purple-50 to-pink-50 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900 flex items-center justify-center p-4">
+    <div className="min-h-screen bg-gray-50 flex items-center justify-center p-4">
       <div className="w-full max-w-md">
         {/* Tarjeta principal */}
-        <div className="bg-white/80 dark:bg-gray-800/80 backdrop-blur-xl rounded-2xl shadow-2xl border border-white/20 dark:border-gray-700/50 p-8 transform transition-all duration-300 hover:shadow-3xl">
+        <div className="bg-white rounded-2xl shadow-sm border border-gray-200 p-8">
           {/* Header */}
           <div className="text-center mb-8">
-            <div className="inline-flex items-center justify-center w-16 h-16 bg-gradient-to-br from-indigo-500 to-purple-600 rounded-2xl mb-4 shadow-lg">
-              <span className="text-3xl">🦈</span>
+            <div className="inline-flex items-center justify-center w-16 h-16 bg-blue-600 rounded-2xl mb-4 shadow-sm">
+              <span className="text-3xl">🌌</span>
             </div>
-            <h1 className="text-3xl font-bold bg-gradient-to-r from-indigo-600 to-purple-600 bg-clip-text text-transparent mb-2">
+            <h1 className="text-3xl font-bold text-gray-900 mb-2">
               Stellar Wallet
             </h1>
-            <p className="text-gray-600 dark:text-gray-400 text-sm">
+            <p className="text-gray-600 text-sm">
               Conecta tu Freighter Wallet de forma segura
             </p>
           </div>
 
           {/* Error message */}
           {error && (
-            <div className="mb-6 p-4 bg-red-50 dark:bg-red-900/20 border-l-4 border-red-500 rounded-lg transition-all duration-300">
+            <div className="mb-6 p-4 bg-red-50 border border-red-200 rounded-xl">
               <div className="flex items-center">
                 <span className="text-red-500 text-xl mr-2">⚠️</span>
-                <p className="text-red-700 dark:text-red-400 text-sm font-medium">{error}</p>
+                <p className="text-red-700 text-sm font-medium">{error}</p>
               </div>
             </div>
           )}
@@ -103,12 +105,12 @@ export default function WalletConnect() {
           {/* Contenido según estado */}
           {!walletConnected ? (
             <div className="space-y-6">
-              {/* Botón de conectar */}
-              <button
-                onClick={connectWallet}
-                disabled={isConnecting}
-                className="w-full bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 text-white font-semibold py-4 px-6 rounded-xl shadow-lg hover:shadow-xl transform hover:scale-[1.02] active:scale-[0.98] transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none flex items-center justify-center gap-2"
-              >
+                                {/* Botón de conectar */}
+                  <button
+                    onClick={connectWallet}
+                    disabled={isConnecting}
+                    className="w-full bg-blue-600 hover:bg-blue-700 disabled:bg-gray-300 disabled:cursor-not-allowed text-white font-semibold py-4 px-6 rounded-xl shadow-sm transition-all duration-200 flex items-center justify-center gap-2"
+                  >
                 {isConnecting ? (
                   <>
                     <svg className="animate-spin h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
@@ -149,39 +151,51 @@ export default function WalletConnect() {
                   Wallet Conectada
                 </p>
 
-                {/* Dirección pública */}
-                {publicKey && (
-                  <div className="bg-gradient-to-br from-gray-50 to-gray-100 dark:from-gray-700/50 dark:to-gray-800/50 rounded-xl p-5 border border-gray-200 dark:border-gray-700">
-                    <p className="text-xs font-semibold text-gray-500 dark:text-gray-400 mb-2 uppercase tracking-wide">
-                      Dirección Pública
-                    </p>
-                    <div className="flex items-center justify-between gap-3">
-                      <code className="text-sm font-mono text-gray-800 dark:text-gray-200 break-all flex-1">
-                        {publicKey}
-                      </code>
-                      <button
-                        onClick={copyToClipboard}
-                        className="flex-shrink-0 p-2 bg-indigo-100 dark:bg-indigo-900/30 hover:bg-indigo-200 dark:hover:bg-indigo-900/50 rounded-lg transition-colors duration-200"
-                        title="Copiar dirección"
-                      >
-                        {copySuccess ? (
-                          <span className="text-green-600 dark:text-green-400 text-lg">✓</span>
-                        ) : (
-                          <span className="text-indigo-600 dark:text-indigo-400 text-lg">📋</span>
-                        )}
-                      </button>
+                                  {/* Dirección pública */}
+                  {publicKey && (
+                    <div className="bg-gray-50 rounded-xl p-5 border border-gray-200">
+                      <p className="text-xs font-semibold text-gray-500 mb-2 uppercase tracking-wide">
+                        Dirección Pública
+                      </p>
+                      <div className="flex items-center justify-between gap-3">
+                        <code className="text-sm font-mono text-gray-900 break-all flex-1">
+                          {publicKey}
+                        </code>
+                        <button
+                          onClick={copyToClipboard}
+                          className="flex-shrink-0 p-2 bg-blue-100 hover:bg-blue-200 rounded-lg transition-colors duration-200"
+                          title="Copiar dirección"
+                        >
+                          {copySuccess ? (
+                            <span className="text-green-600 text-lg">✓</span>
+                          ) : (
+                            <span className="text-blue-600 text-lg">📋</span>
+                          )}
+                        </button>
+                      </div>
+                      <p className="text-xs text-gray-500 mt-2 font-mono">
+                        {formatAddress(publicKey)}
+                      </p>
                     </div>
-                    <p className="text-xs text-gray-500 dark:text-gray-400 mt-2 font-mono">
-                      {formatAddress(publicKey)}
-                    </p>
-                  </div>
-                )}
+                  )}
               </div>
+
+              {/* Componente de Balances */}
+              <Balance isConnected={walletConnected} address={publicKey} />
+
+              {/* Trustline Manager */}
+              <TrustlineManager 
+                address={publicKey} 
+                onTrustlineCreated={() => {
+                  // Recargar balances después de crear trustline
+                  // Esto se manejará automáticamente con el useEffect en Balance
+                }}
+              />
 
               {/* Botón desconectar */}
               <button
                 onClick={disconnectWallet}
-                className="w-full bg-gradient-to-r from-red-500 to-pink-500 hover:from-red-600 hover:to-pink-600 text-white font-semibold py-4 px-6 rounded-xl shadow-lg hover:shadow-xl transform hover:scale-[1.02] active:scale-[0.98] transition-all duration-200 flex items-center justify-center gap-2"
+                className="w-full bg-gray-200 hover:bg-gray-300 text-gray-800 font-semibold py-4 px-6 rounded-xl shadow-sm transition-all duration-200 flex items-center justify-center gap-2"
               >
                 <span className="text-xl">🚪</span>
                 Desconectar Wallet
@@ -191,7 +205,7 @@ export default function WalletConnect() {
         </div>
 
         {/* Footer */}
-        <p className="text-center text-xs text-gray-500 dark:text-gray-400 mt-6">
+        <p className="text-center text-xs text-gray-500 mt-6">
           Conectado de forma segura con Freighter
         </p>
       </div>

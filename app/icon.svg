@@ -1,0 +1,78 @@
+<svg width="512" height="512" viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="sharkGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#FF4D8D;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#FF7A3D;stop-opacity:1" />
+    </linearGradient>
+    
+    <linearGradient id="highlightGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#FFB3D1;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#FFB088;stop-opacity:1" />
+    </linearGradient>
+  </defs>
+  
+  <!-- Fondo circular -->
+  <circle cx="256" cy="256" r="240" fill="url(#sharkGradient)" opacity="0.1"/>
+  
+  <!-- Cuerpo del tiburón -->
+  <path d="M 150 280 Q 120 260 110 220 Q 105 180 130 160 Q 150 145 180 150 L 220 160 Q 280 170 340 160 Q 380 155 410 170 Q 430 180 435 210 Q 438 240 420 270 Q 400 295 360 300 L 280 305 Q 220 305 180 295 Q 160 290 150 280 Z" 
+        fill="url(#sharkGradient)"/>
+  
+  <!-- Cola del tiburón -->
+  <path d="M 110 220 Q 80 210 60 200 Q 40 185 35 165 L 50 160 Q 70 165 85 180 Q 95 195 105 210 Z" 
+        fill="url(#sharkGradient)"/>
+  
+  <!-- Aleta dorsal -->
+  <path d="M 280 160 L 290 100 Q 295 80 310 85 Q 315 90 312 110 L 300 155 Z" 
+        fill="url(#sharkGradient)"/>
+  
+  <!-- Aleta pectoral superior -->
+  <path d="M 220 160 L 210 120 Q 205 100 220 95 Q 230 93 235 110 L 235 150 Z" 
+        fill="url(#highlightGradient)" opacity="0.8"/>
+  
+  <!-- Aleta pectoral inferior -->
+  <path d="M 180 295 L 165 330 Q 160 345 170 355 Q 180 360 190 345 L 195 305 Z" 
+        fill="url(#highlightGradient)" opacity="0.8"/>
+  
+  <!-- Aleta anal -->
+  <path d="M 360 300 L 375 340 Q 380 355 390 358 Q 400 360 405 345 L 395 305 Z" 
+        fill="url(#highlightGradient)" opacity="0.8"/>
+  
+  <!-- Detalles del cuerpo (líneas) -->
+  <path d="M 180 200 Q 250 195 340 200" 
+        stroke="url(#highlightGradient)" stroke-width="2" fill="none" opacity="0.4"/>
+  <path d="M 185 230 Q 250 225 335 230" 
+        stroke="url(#highlightGradient)" stroke-width="2" fill="none" opacity="0.4"/>
+  <path d="M 190 260 Q 250 255 330 260" 
+        stroke="url(#highlightGradient)" stroke-width="2" fill="none" opacity="0.4"/>
+  
+  <!-- Ojo del tiburón -->
+  <circle cx="360" cy="210" r="18" fill="#1A1A2E"/>
+  <circle cx="365" cy="207" r="6" fill="white"/>
+  
+  <!-- Boca con dientes -->
+  <path d="M 390 250 Q 385 265 370 270" 
+        stroke="#1A1A2E" stroke-width="3" fill="none" stroke-linecap="round"/>
+  
+  <!-- Dientes -->
+  <path d="M 390 250 L 388 260 L 386 250 L 384 260 L 382 250 L 380 260 L 378 250 L 376 260 L 374 250 L 372 260 L 370 250" 
+        stroke="white" stroke-width="2" fill="none" opacity="0.8"/>
+  
+  <!-- Branquias -->
+  <g opacity="0.5">
+    <path d="M 320 230 Q 318 240 316 250" stroke="url(#highlightGradient)" stroke-width="2" fill="none"/>
+    <path d="M 305 235 Q 303 245 301 255" stroke="url(#highlightGradient)" stroke-width="2" fill="none"/>
+    <path d="M 290 238 Q 288 248 286 258" stroke="url(#highlightGradient)" stroke-width="2" fill="none"/>
+  </g>
+  
+  <!-- Efecto de brillo -->
+  <ellipse cx="300" cy="180" rx="60" ry="30" fill="white" opacity="0.15"/>
+  
+  <!-- Ondas de agua (efecto decorativo) -->
+  <g opacity="0.2">
+    <path d="M 100 350 Q 150 340 200 350 Q 250 360 300 350 Q 350 340 400 350" 
+          stroke="url(#highlightGradient)" stroke-width="3" fill="none"/>
+    <path d="M 120 380 Q 170 370 220 380 Q 270 390 320 380 Q 370 370 420 380" 
+          stroke="url(#highlightGradient)" stroke-width="3" fill="none"/>
+  </g>
+</svg>
